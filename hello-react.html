@@ -4,22 +4,35 @@
   <title>Hello React</title>
   <script src="https://fb.me/react-0.13.3.js"></script>
   <script src="https://fb.me/JSXTransformer-0.13.3.js"></script>
+  <style media="screen">
+    .done{
+      color: tomato;
+    }
+    .not-done{
+      color: lightgreen;
+    }
+  </style>
 </head>
 <body>
   <div id="content"></div>
 
   <script type="text/jsx">
     var todos = [
-      {name: "go class"},
-      {name: "dont get wet"},
-      {name: "learn git"},
-      {name: "learn command prompt"},
-      {name: "learn react"},
+      {name: "go class", isDone: true },
+      {name: "dont get wet", isDone: false },
+      {name: "learn git", isDone: true },
+      {name: "learn command prompt", isDone: true },
+      {name: "learn react", isDone: false },
     ];
 
     Todo = React.createClass({
       render: function(){
-        return <li>{this.props.name}</li>
+        return (<li onClick={this.handleClick} className={this.props.isDone ? "done" : "not-done" }>
+                  {this.props.name}
+                </li>);
+      },
+      handleClick: function(){
+        console.log("clicked todo", this.props)
       }
     })
 
@@ -28,7 +41,7 @@
         return (
           <div>
             <ul>
-              {this.props.todos.map(function(todo){ return <Todo name={todo.name} />    }) }
+              {this.props.todos.map(function(todo){ return <Todo name={todo.name} isDone={todo.isDone} />    }) }
             </ul>
           </div>
         );

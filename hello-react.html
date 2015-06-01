@@ -9,14 +9,33 @@
   <div id="content"></div>
 
   <script type="text/jsx">
+    var todos = [
+      {name: "go class"},
+      {name: "dont get wet"},
+      {name: "learn git"},
+      {name: "learn command prompt"},
+      {name: "learn react"},
+    ];
 
-    TodoList = React.createClass({
+    Todo = React.createClass({
       render: function(){
-        return <h1>Hello from React!!</h1>;
+        return <li>{this.props.name}</li>
       }
     })
 
-    React.render(<TodoList />, document.getElementById('content') )
+    TodoList = React.createClass({
+      render: function(){
+        return (
+          <div>
+            <ul>
+              {this.props.todos.map(function(todo){ return <Todo name={todo.name} />    }) }
+            </ul>
+          </div>
+        );
+      }
+    })
+
+    React.render(<TodoList todos={todos} />, document.getElementById('content') )
   </script>
 </body>
 </html>

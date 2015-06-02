@@ -25,10 +25,10 @@
       {name: "learn react", isDone: false },
     ];
 
-    findTodo = function(todoName){
-      for(todo of todos){
-        if(todo.name == todoName){
-          return todo;
+    findTodoIndex = function(todoName){
+      for (var i = 0; i < todos.length; i++) {
+        if(todos[i].name == todoName){
+          return i;
         }
       }
       throw "not found"
@@ -38,22 +38,38 @@
       todos.push({name: todoName, isDone: false})
     }
 
+    removeTodo = function(todoName){
+      var idx = findTodoIndex(todoName)
+      todos.splice(idx, 1)
+    }
+
     renderTodos = function(){
       React.render(<TodoList todos={todos} />, document.getElementById('content') )
     }
 
     Todo = React.createClass({
       render: function(){
-        return (<li onClick={this.handleClick} className={this.props.isDone ? "done" : "not-done" }>
-                  {this.props.name}
+        return (<li className={this.props.isDone ? "done" : "not-done" }>
+                  <span onClick={this.handleClick} >{this.props.name}</span>
+                  {this.getDeleteButton()}
                 </li>);
       },
-      handleClick: function(){
-        todo = findTodo(this.props.name)
-        todo.isDone = !todo.isDone;
+      handleClick: function(event){
+        todoIdx = findTodoIndex(this.props.name)
+        todos[todoIdx].isDone = !todos[todoIdx].isDone;
         renderTodos()
-        console.log("clicked todo", this.props)
+      },
+      getDeleteButton: function(){
+        if(this.props.isDone){
+          return <button onClick={this.handleRemoveTodo}>Remove</button>;
+        }
+      },
+      handleRemoveTodo:function(event){
+        // event.stopPropagation()
+        removeTodo(this.props.name)
+        renderTodos()
       }
+
     })
 
     TodoList = React.createClass({
@@ -75,7 +91,7 @@
       },
       addTodo: function(event){
         event.preventDefault();
-        console.log("add todo", this.refs.nextTodo.getDOMNode().value);
+
         addTodo(this.refs.nextTodo.getDOMNode().value)
         renderTodos()
       }

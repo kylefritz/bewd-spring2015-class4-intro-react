@@ -25,6 +25,15 @@
       {name: "learn react", isDone: false },
     ];
 
+    findTodo = function(todoName){
+      for(todo of todos){
+        if(todo.name == todoName){
+          return todo;
+        }
+      }
+      throw "not found"
+    }
+
     Todo = React.createClass({
       render: function(){
         return (<li onClick={this.handleClick} className={this.props.isDone ? "done" : "not-done" }>
@@ -32,23 +41,34 @@
                 </li>);
       },
       handleClick: function(){
+        todo = findTodo(this.props.name)
+        todo.isDone = !todo.isDone;
+        renderTodos()
         console.log("clicked todo", this.props)
       }
     })
 
     TodoList = React.createClass({
       render: function(){
+        var todoLiElements = this.props.todos.map(function(todo){
+          return <Todo name={todo.name} isDone={todo.isDone} />
+        });
+
         return (
           <div>
             <ul>
-              {this.props.todos.map(function(todo){ return <Todo name={todo.name} isDone={todo.isDone} />    }) }
+              {todoLiElements}
             </ul>
           </div>
         );
       }
     })
+    renderTodos = function(){
+      React.render(<TodoList todos={todos} />, document.getElementById('content') )
+    }
 
-    React.render(<TodoList todos={todos} />, document.getElementById('content') )
+    //render the first time
+    renderTodos();
   </script>
 </body>
 </html>

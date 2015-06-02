@@ -6,10 +6,10 @@
   <script src="https://fb.me/JSXTransformer-0.13.3.js"></script>
   <style media="screen">
     .done{
-      color: tomato;
+      color: lightgreen;
     }
     .not-done{
-      color: lightgreen;
+      color: tomato;
     }
   </style>
 </head>
@@ -34,6 +34,14 @@
       throw "not found"
     }
 
+    addTodo = function(todoName){
+      todos.push({name: todoName, isDone: false})
+    }
+
+    renderTodos = function(){
+      React.render(<TodoList todos={todos} />, document.getElementById('content') )
+    }
+
     Todo = React.createClass({
       render: function(){
         return (<li onClick={this.handleClick} className={this.props.isDone ? "done" : "not-done" }>
@@ -56,16 +64,22 @@
 
         return (
           <div>
+            <form onSubmit={this.addTodo}>
+              <input ref="nextTodo" />
+            </form>
             <ul>
               {todoLiElements}
             </ul>
           </div>
         );
+      },
+      addTodo: function(event){
+        event.preventDefault();
+        console.log("add todo", this.refs.nextTodo.getDOMNode().value);
+        addTodo(this.refs.nextTodo.getDOMNode().value)
+        renderTodos()
       }
     })
-    renderTodos = function(){
-      React.render(<TodoList todos={todos} />, document.getElementById('content') )
-    }
 
     //render the first time
     renderTodos();
